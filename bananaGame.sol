@@ -7,9 +7,7 @@ contract BananaGame is usingOraclize{
     uint constant ORACLIZE_GAS_LIMIT = 175000;
     uint percent = 50; //max is 100
     uint constant minBet =200 finney;
-    // uint constant maxWin = 100;//(10000=100%)
-     address public owner;
-    // address public houseAddress;
+    address public owner;
     bool public isStopped;
     event LOG_OwnerAddressChanged(address owner,address newOwner);
     event LOG_NewBet(address addr, uint value);
@@ -58,8 +56,8 @@ contract BananaGame is usingOraclize{
         _;
     }
     
-    mapping (bytes32 => Bet) public bets; //key与响应bet之间的映射
-    bytes32[] public betsKeys; //记录数组
+    mapping (bytes32 => Bet) public bets;
+    bytes32[] public betsKeys; 
     
      function BananaGame(){
         oraclize_setProof(proofType_TLSNotary | proofStorage_IPFS);
@@ -112,7 +110,7 @@ contract BananaGame is usingOraclize{
     function doExecute(bytes32 myid,uint _amountBet,bytes _betResult) internal {
         uint initAccount=_amountBet;
         uint getAccount;
-        //计算本次投注
+        
         for(uint i=0;i<_betResult.length;i++){
             if(_betResult[i]==49){
                 if(getAccount+initAccount<getAccount||_amountBet+getAccount<_amountBet){
@@ -128,17 +126,17 @@ contract BananaGame is usingOraclize{
             // bets[myid].playerAddr.transfer(getAccount);
             safeSend(bets[myid].playerAddr,getAccount);
         }else{
-            safeSend(bets[myid].playerAddr,1 wei);//如果第一轮就输掉了转1wei
+            safeSend(bets[myid].playerAddr,1 wei);
         }
     }
-    //
+
     function safeSend(address addr,uint value) internal{
         if (value == 0) {
-            // LOG_ZeroSend();
+            
             return;
         }
         if (this.balance < value) {
-            // LOG_ValueIsTooBig();
+           
             return;
         }
         if (!(addr.call.gas(safeGas).value(value)())) {
@@ -161,7 +159,6 @@ contract BananaGame is usingOraclize{
         return betsKeys.length;
     }
     
-    // 更爱owner
      function changeOwnerAddress(address newOwner)
         onlyOwner {
         if (newOwner == address(0x0)) throw;
