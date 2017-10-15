@@ -11,14 +11,13 @@ contract BananaGame is usingOraclize{
      address public owner;
     // address public houseAddress;
     bool public isStopped;
-    //event
-    event LOG_OwnerAddressChanged(address owner,address newOwner);//时间更改owner
+    event LOG_OwnerAddressChanged(address owner,address newOwner);
     event LOG_NewBet(address addr, uint value);
-    event LOG_ContractStopped(); //暂停合约
+    event LOG_ContractStopped(); 
     event LOG_GasLimitChanged(uint oldGasLimit, uint newGasLimit);
-    event LOG_InjectEth(address addr,uint value); //注入eth资金池
-    event LOG_FailedSend(address receiver, uint amount); //转出事件（失败）
-    event LOG_SuccessfulSend(address receiver, uint amount);//转出事件(成功)
+    event LOG_InjectEth(address addr,uint value); 
+    event LOG_FailedSend(address receiver, uint amount); 
+    event LOG_SuccessfulSend(address receiver, uint amount);
     struct Bet{
         address playerAddr;
         uint amountBet;
@@ -147,27 +146,8 @@ contract BananaGame is usingOraclize{
         }
         LOG_SuccessfulSend(addr,value);
     }
-    //  function safeSend(address addr, uint value)
-    //     private {
-    //     if (value == 0) {
-    //         LOG_ZeroSend();
-    //         return;
-    //     }
-    //     if (this.balance < value) {
-    //         LOG_ValueIsTooBig();
-    //         return;
-    //     }
-    //     if (!(addr.call.gas(safeGas).value(value)())) {
-    //         LOG_FailedSend(addr, value);
-    //         if (addr != houseAddress) {
-    //             //Forward to house address all change
-    //             if (!(houseAddress.call.gas(safeGas).value(value)())) LOG_FailedSend(houseAddress, value);
-    //         }
-    //     }
-    //     LOG_SuccessfulSend(addr,value);
-    // }
+    
 
-    //停止合约
     function setStopped() onlyOwner{
         isStopped =true;
         LOG_ContractStopped();
@@ -196,16 +176,6 @@ contract BananaGame is usingOraclize{
         LOG_GasLimitChanged(safeGas, newGasLimit);
     }
 
-    // function getBet(uint id)
-    //     constant
-    //     returns(address, uint, uint) {
-
-    //     if (id < betsKeys.length) {
-    //         bytes32 betKey = betsKeys[id];
-    //         return (bets[betKey].playerAddr, bets[betKey].amountBet, bets[betKey].betResult);
-    //     }
-    // }
-    //注入eth
     function injectEth() payable{
         if(msg.value<=0.6 ether) throw;
         LOG_InjectEth(msg.sender,msg.value);        
@@ -232,12 +202,5 @@ contract BananaGame is usingOraclize{
     function getMaxBetAmount() constant returns (uint){
         return this.balance/20;
     }
-    // function getMaxBetAmount()
-    //     constant
-    //     returns(uint) {
-
-    //     uint oraclizeFee = OraclizeI(OAR.getAddress()).getPrice("URL", ORACLIZE_GAS_LIMIT + safeGas);
-    //     // uint betValue =  (maxWin * getBankroll()) * pwin / (10000 * (10000 - edge - pwin));
-    //     return betValue + oraclizeFee;
-    // }
+ 
 }
