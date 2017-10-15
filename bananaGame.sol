@@ -5,7 +5,7 @@ contract BananaGame is usingOraclize{
     uint constant times = 64;
     uint safeGas = 2300;
     uint constant ORACLIZE_GAS_LIMIT = 175000;
-    uint percent = 50; //max is 100
+    uint percent = 50; 
     uint constant minBet =200 finney;
     address public owner;
     bool public isStopped;
@@ -88,8 +88,8 @@ contract BananaGame is usingOraclize{
     function __callback(bytes32 myid, string result, bytes proof) onlyOraclize onlyIfBetExist(myid) 
     onlyIfNotProcessed(myid) {
         bytes memory queue = bytes(result);
-        // bytes memory doResult = bytes(64);
-        // string memory s =  new string(64);
+        bytes memory doResult = bytes(64);
+        string memory s =  new string(64);
         bytes memory sd;
         uint k=0;
         if(queue.length<64){
